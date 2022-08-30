@@ -1,5 +1,5 @@
 ---
-title: Anti-Fermat
+title: Anti-Fermat Writeup
 layout: post
 ---
 

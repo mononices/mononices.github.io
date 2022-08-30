@@ -1,0 +1,82 @@
+I"?!<table>
+  <thead>
+    <tr>
+      <th>Crypto</th>
+      <th>Warmup</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>test</td>
+      <td>h</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><em>I invented Anti-Fermat Key Generation for RSA cipher since I’m scared of the Fermat’s Factorization Method.</em></p>
+
+<p><a href="https://github.com/kanin9/ctf/files/8313836/challenge.zip">Challenge download file</a></p>
+
+<p>From the start we are greeted with this chunk of code and output in hex format</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">Crypto.Util.number</span> <span class="kn">import</span> <span class="n">isPrime</span><span class="p">,</span> <span class="n">getStrongPrime</span>
+<span class="kn">from</span> <span class="nn">gmpy</span> <span class="kn">import</span> <span class="n">next_prime</span>
+<span class="kn">from</span> <span class="nn">secret</span> <span class="kn">import</span> <span class="n">flag</span>
+
+
+<span class="c1"># Anti-Fermat Key Generation
+</span><span class="n">p</span> <span class="o">=</span> <span class="n">getStrongPrime</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">next_prime</span><span class="p">(</span><span class="n">p</span> <span class="o">^</span> <span class="p">((</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">1024</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span>
+<span class="n">e</span> <span class="o">=</span> <span class="mi">65537</span>
+
+<span class="c1"># Encryption
+</span><span class="n">m</span> <span class="o">=</span> <span class="nb">int</span><span class="p">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="s">'big'</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="n">n</span>
+<span class="n">c</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'n = {}'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'c = {}'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">c</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<p>Now, we can deduce that q is slightly above (2<sup>1024</sup>-1) xor P. On average it is 12 lower bits that differ.
+With this information we can bruteforce factors of N, if we rewrite our Q as (2<sup>1024</sup> - 1 - P + error), we can factorize N only using P
+and error value which we will increment through 0 to 2<sup>13</sup></p>
+
+\[(P((2^1024 - 1) - P + error) = N)\]
+
+\[-P^2 + (error + 2^1024 - 1)P - N = 0\]
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">Crypto.Util.number</span> <span class="kn">import</span> <span class="n">long_to_bytes</span>
+<span class="kn">from</span> <span class="nn">gmpy2</span> <span class="kn">import</span> <span class="n">next_prime</span>
+<span class="kn">from</span> <span class="nn">values</span> <span class="kn">import</span> <span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">modinv</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">isqrt</span>
+
+
+<span class="n">P</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">e</span> <span class="o">=</span> <span class="mi">65537</span>
+
+<span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">13</span><span class="p">):</span>
+    <span class="n">xor</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">xor</span> <span class="o">+</span> <span class="n">error</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">b</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">n</span>
+    <span class="n">sqr</span> <span class="o">=</span> <span class="n">isqrt</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sqr</span> <span class="o">*</span> <span class="n">sqr</span> <span class="o">==</span> <span class="n">D</span><span class="p">:</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">+</span> <span class="n">sqr</span><span class="p">)</span> <span class="o">//</span> <span class="o">-</span><span class="mi">2</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">-</span> <span class="n">sqr</span><span class="p">)</span> <span class="o">//</span> <span class="o">-</span><span class="mi">2</span>
+        <span class="k">if</span> <span class="n">x1</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">//</span> <span class="n">x1</span><span class="p">)</span> <span class="o">==</span> <span class="n">n</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">"Value found "</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span>
+            <span class="n">P</span> <span class="o">=</span> <span class="n">x1</span>
+        <span class="k">if</span> <span class="n">x2</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">//</span> <span class="n">x2</span><span class="p">)</span> <span class="o">==</span> <span class="n">n</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">"Value found "</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
+            <span class="n">P</span> <span class="o">=</span> <span class="n">x2</span>
+
+<span class="n">Q</span> <span class="o">=</span> <span class="n">n</span> <span class="o">//</span> <span class="n">P</span>
+<span class="n">phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">P</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">Q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">modinv</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">long_to_bytes</span><span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">n</span><span class="p">)))</span>
+</code></pre></div></div>
+<p><img src="https://user-images.githubusercontent.com/101967194/159232684-9a1bfb65-7283-4843-8f83-7c130c586c15.PNG" alt="image" /></p>
+
+<p>And we got ourselves a neat flag - <code class="language-plaintext highlighter-rouge">zer0pts{F3rm4t,y0ur_m3th0d_n0_l0ng3r_w0rks.y0u_4r3_f1r3d}</code></p>
+:ET
