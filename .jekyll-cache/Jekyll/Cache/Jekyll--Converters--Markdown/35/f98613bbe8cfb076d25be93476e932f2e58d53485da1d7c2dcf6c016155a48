@@ -1,0 +1,14 @@
+I"ï<p><em>Haha goose say funny thing</em></p>
+
+<p><a href="https://ctf2022.maplebacon.org/files/0565426a10b6e02a4fd2dcc6ca720ab0/honksay.tar.gz">Download challenge</a></p>
+
+<h2 id="investigation">Investigation</h2>
+
+<p>Honksay challenge presents itself with this page</p>
+
+<p><img src="/assets/honksay.png" alt="honk" /></p>
+
+<h2 id="code-investigation">Code investigation</h2>
+
+<p>Looking onto its code we see that website has an admin bot that visits every page you specify in feedback field</p>
+:ET

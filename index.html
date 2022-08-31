@@ -18,5 +18,6 @@ layout: default
 	  <p>{{ post.excerpt  }}</p>
           <a href="{{ post.url | prepend: site.baseurl | replace: '//', '/' }}" class="read-more">Read More</a>
       </li>
+      <br><br>
     {% endfor %}
 </ul>

