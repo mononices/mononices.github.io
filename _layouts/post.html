@@ -5,5 +5,14 @@ layout: default
 <article>
   <h2>{{ page.title }}</h2>
   <time datetime="{{ page.date | date_to_xmlschema }}" class="by-line">{{ page.date | date_to_string }}</time>
+  <br><br> 
+  <span style="display: block;">[
+  {% for tag in page.tags %}
+    {% capture tag_name %}{{ tag }}{% endcapture %}
+    <a href="{{ page.url }}" style="text-decoration:none"><code class="highligher-rouge"><nobr>{{ tag_name }}</nobr></code></a>
+  {% endfor %}
+  ]</span>
+  
   {{ content }}
+
 </article>

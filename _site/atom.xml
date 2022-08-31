@@ -13,9 +13,7 @@
     
       <item>
         <title>Anti-Fermat Writeup</title>
-        <description>&lt;p&gt;[zer0pts 2022]&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;I invented Anti-Fermat Key Generation for RSA cipher since I’m scared of the Fermat’s Factorization Method.&lt;/em&gt;&lt;/p&gt;
+        <description>&lt;p&gt;&lt;em&gt;I invented Anti-Fermat Key Generation for RSA cipher since I’m scared of the Fermat’s Factorization Method.&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/kanin9/ctf/files/8313836/challenge.zip&quot;&gt;Download challenge&lt;/a&gt;&lt;/p&gt;
 
@@ -91,9 +89,9 @@
 &lt;p&gt;&lt;strong&gt;zer0pts{F3rm4t,y0ur_m3th0d_n0_l0ng3r_w0rks.y0u_4r3_f1r3d}&lt;/strong&gt;&lt;/p&gt;
 </description>
         <pubDate>Mon, 21 Mar 2022 00:00:00 +0600</pubDate>
-        <link>http://localhost:8000//antifermat-zer0pts</link>
-        <link href="http://localhost:8000/antifermat-zer0pts"/>
-        <guid isPermaLink="true">http://localhost:8000/antifermat-zer0pts</guid>
+        <link>http://localhost:8000//antifermat</link>
+        <link href="http://localhost:8000/antifermat"/>
+        <guid isPermaLink="true">http://localhost:8000/antifermat</guid>
       </item>
     
   </channel>

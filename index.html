@@ -7,8 +7,16 @@ layout: default
       <li>
           <h2><a href="{{ post.url | prepend: site.baseurl | replace: '//', '/' }}">{{ post.title }}</a></h2>
 	  <!--<time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date_to_string }}</time>-->
-          <p>{{ post.excerpt }}</p>
-          <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
+	  
+	  <span>[
+  	    {% for tag in post.tags %}
+    		{% capture tag_name %}{{ tag }}{% endcapture %}
+    		<a href="/" style="text-decoration:none;"><code class="highligher-rouge"><nobr>{{ tag_name }}</nobr></code></a>
+  	    {% endfor %}
+	]</span>
+
+	  <p>{{ post.excerpt  }}</p>
+          <a href="{{ post.url | prepend: site.baseurl | replace: '//', '/' }}" class="read-more">Read More</a>
       </li>
     {% endfor %}
 </ul>
