@@ -8,8 +8,7 @@ tags: crypto warmup zer0pts
 
 [Download challenge](https://github.com/kanin9/ctf/files/8313836/challenge.zip)
 
-Description gives us a hint, pointing to Fermat's Factorization method, but the solution boils down to solving quadratic equation.
-
+Description gives us a hint, pointing to Fermat's Factorization method, anyway solution boils down to solving quadratic equation.
 From the start we are greeted with this chunk of code and output in hex format
 
 ```python
