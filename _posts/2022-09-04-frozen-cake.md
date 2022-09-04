@@ -35,7 +35,7 @@ And as we remember totient function for n is just **(p-1)(q-1)**
 We can factor totient as **n - p - q - 1**
 
 To substract exponents we should divide one ciphertext by another, but how can we do it in a modulo scenario?
-For this purposes exist modular inverses. Dividing `c` value by `a` and `b`, or more specifically multiplying `c` bymodular inverses of `a` and `b`, we get almost here, now we need to somehow calculate m. Let's take a side look on what we already figured out.
+For this purposes exist modular inverses. Dividing `c` value by `a` and `b`, or more specifically multiplying `c` by modular inverses of `a` and `b`, we get almost here, now we need to somehow calculate m. Let's take a side look on what we already figured out.
 
 **d = m^(n - p - q)**
 
