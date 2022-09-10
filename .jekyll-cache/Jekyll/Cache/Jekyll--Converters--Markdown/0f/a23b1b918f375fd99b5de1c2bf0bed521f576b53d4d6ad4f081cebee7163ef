@@ -1,0 +1,53 @@
+I"�<p><em>Oh your cake is frozen. please warm it up and get the first cake.</em></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">Crypto.Util.number</span> <span class="kn">import</span> <span class="n">getPrime</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">flag</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">"FLAG"</span><span class="p">,</span> <span class="s">"FakeCTF{warmup_a_frozen_cake}"</span><span class="p">)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">flag</span><span class="p">.</span><span class="n">encode</span><span class="p">().</span><span class="nb">hex</span><span class="p">(),</span> <span class="mi">16</span><span class="p">)</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">getPrime</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">getPrime</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="n">p</span><span class="o">*</span><span class="n">q</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"n ="</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"a ="</span><span class="p">,</span> <span class="nb">pow</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"b ="</span><span class="p">,</span> <span class="nb">pow</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"c ="</span><span class="p">,</span> <span class="nb">pow</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>This task was built around general intuition of how RSA works, especially the decryption part.</p>
+
+<p>To solve this challenge you need to learn about generalised form of Fermat’s Little Theorem, here it is:</p>
+
+<p><strong>a^(ф(n)) = 1 mod n</strong> <em>(n here is not necessarily prime)</em></p>
+
+<p>And as we remember totient function for n is just <strong>(p-1)(q-1)</strong></p>
+
+<p>We can factor totient as <strong>n - p - q - 1</strong></p>
+
+<p>To substract exponents we should divide one ciphertext by another, but how can we do it in modulo scenario?
+For this purposes exist modular inverse. Dividing <code class="language-plaintext highlighter-rouge">a</code> value by <code class="language-plaintext highlighter-rouge">b</code> and <code class="language-plaintext highlighter-rouge">c</code> we get almost here, now we need to somehow calculate m. Let’s take a side look on what we got.</p>
+
+<p><strong>d = m^(n - p - q)</strong></p>
+
+<p><strong>dm = 1 (mod n)</strong></p>
+
+<p>Last equation seems familiar ain’t so?
+Yes, m is just modular inverse for our value d modulo n</p>
+
+<p>So far, so good, we get a solution.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">n</span> <span class="o">=</span> <span class="mi">101205131618457490641888226172378900782027938652382007193297646066245321085334424928920128567827889452079884571045344711457176257019858157287424646000972526730522884040459357134430948940886663606586037466289300864147185085616790054121654786459639161527509024925015109654917697542322418538800304501255357308131</span>
+<span class="n">a</span> <span class="o">=</span> <span class="mi">38686943509950033726712042913718602015746270494794620817845630744834821038141855935687477445507431250618882887343417719366326751444481151632966047740583539454488232216388308299503129892656814962238386222995387787074530151173515835774172341113153924268653274210010830431617266231895651198976989796620254642528</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mi">83977895709438322981595417453453058400465353471362634652936475655371158094363869813512319678334779139681172477729044378942906546785697439730712057649619691929500952253818768414839548038664187232924265128952392200845425064991075296143440829148415481807496095010301335416711112897000382336725454278461965303477</span>
+<span class="n">c</span> <span class="o">=</span> <span class="mi">21459707600930866066419234194792759634183685313775248277484460333960658047171300820279668556014320938220170794027117386852057041210320434076253459389230704653466300429747719579911728990434338588576613885658479123772761552010662234507298817973164062457755456249314287213795660922615911433075228241429771610549</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span> <span class="o">%</span> <span class="n">n</span>
+<span class="n">m</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">bytes</span><span class="p">.</span><span class="n">fromhex</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">m</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]))</span>
+</code></pre></div></div>
+<p>If you read my explanation all the way through, try solution for yourself. Don’t be a coward. =)</p>
+
+:ET
