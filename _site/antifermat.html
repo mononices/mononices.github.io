@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <meta name="generator" content="Jekyll">
+  <meta name="google-site-verification" content="7KJy1PzJiembrfrHhOlsbL_CYSr-zHARDD6xkKA5S8I" />
 
   <title>Anti-Fermat Writeup</title>
 
@@ -11,7 +12,7 @@
   
   <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Anti-Fermat Writeup | Alikraken’s Blog</title>
-<meta name="generator" content="Jekyll v4.2.2" />
+<meta name="generator" content="Jekyll v4.3.2" />
 <meta property="og:title" content="Anti-Fermat Writeup" />
 <meta name="author" content="Alikraken" />
 <meta property="og:locale" content="en_US" />
@@ -29,6 +30,7 @@
 <!-- End Jekyll SEO tag -->
 
 </head>
+
 <script type="text/javascript">
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -91,23 +93,23 @@
 <p>Description gives us a hint, pointing to Fermat’s Factorization method, anyway solution boils down to solving quadratic equation.
 From the start we are greeted with this chunk of code and output in hex format</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">Crypto.Util.number</span> <span class="kn">import</span> <span class="n">isPrime</span><span class="p">,</span> <span class="n">getStrongPrime</span>
-<span class="kn">from</span> <span class="nn">gmpy</span> <span class="kn">import</span> <span class="n">next_prime</span>
-<span class="kn">from</span> <span class="nn">secret</span> <span class="kn">import</span> <span class="n">flag</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">Crypto.Util.number</span> <span class="kn">import</span> <span class="n">isPrime</span><span class="p">,</span> <span class="n">getStrongPrime</span>
+<span class="kn">from</span> <span class="n">gmpy</span> <span class="kn">import</span> <span class="n">next_prime</span>
+<span class="kn">from</span> <span class="n">secret</span> <span class="kn">import</span> <span class="n">flag</span>
 
 <span class="c1"># Anti-Fermat Key Generation
-</span><span class="n">p</span> <span class="o">=</span> <span class="n">getStrongPrime</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
-<span class="n">q</span> <span class="o">=</span> <span class="n">next_prime</span><span class="p">(</span><span class="n">p</span> <span class="o">^</span> <span class="p">((</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">1024</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+</span><span class="n">p</span> <span class="o">=</span> <span class="nf">getStrongPrime</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="nf">next_prime</span><span class="p">(</span><span class="n">p</span> <span class="o">^</span> <span class="p">((</span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">1024</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 <span class="n">n</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span>
 <span class="n">e</span> <span class="o">=</span> <span class="mi">65537</span>
 
 <span class="c1"># Encryption
-</span><span class="n">m</span> <span class="o">=</span> <span class="nb">int</span><span class="p">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="s">'big'</span><span class="p">)</span>
+</span><span class="n">m</span> <span class="o">=</span> <span class="nb">int</span><span class="p">.</span><span class="nf">from_bytes</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="sh">'</span><span class="s">big</span><span class="sh">'</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="n">n</span>
-<span class="n">c</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="nf">pow</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
 
-<span class="k">print</span><span class="p">(</span><span class="s">'n = {}'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>  <span class="c1"># 0x1ffc7dc6b9667b0dcd00d6ae92...
-</span><span class="k">print</span><span class="p">(</span><span class="s">'c = {}'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">c</span><span class="p">)))</span>  <span class="c1"># 0x60160bfed79384048d0d46b807...
+<span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">n = {}</span><span class="sh">'</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="nf">hex</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>  <span class="c1"># 0x1ffc7dc6b9667b0dcd00d6ae92...
+</span><span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">c = {}</span><span class="sh">'</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="nf">hex</span><span class="p">(</span><span class="n">c</span><span class="p">)))</span>  <span class="c1"># 0x60160bfed79384048d0d46b807...
 </span></code></pre></div></div>
 
 <p>Note that <code class="language-plaintext highlighter-rouge">q</code> is the next prime after the number created by flipping all bits of <code class="language-plaintext highlighter-rouge">p</code>, so we can rewrite <code class="language-plaintext highlighter-rouge">q</code> as follows:</p>
@@ -120,34 +122,34 @@ From the start we are greeted with this chunk of code and output in hex format</
 
 <p><strong>-p^2 + p(error + 2^1024 - 1) - N = 0</strong></p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">Crypto.Util.number</span> <span class="kn">import</span> <span class="n">long_to_bytes</span>
-<span class="kn">from</span> <span class="nn">gmpy2</span> <span class="kn">import</span> <span class="n">next_prime</span>
-<span class="kn">from</span> <span class="nn">values</span> <span class="kn">import</span> <span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">modinv</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">isqrt</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">Crypto.Util.number</span> <span class="kn">import</span> <span class="n">long_to_bytes</span>
+<span class="kn">from</span> <span class="n">gmpy2</span> <span class="kn">import</span> <span class="n">next_prime</span>
+<span class="kn">from</span> <span class="n">values</span> <span class="kn">import</span> <span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">modinv</span>
+<span class="kn">from</span> <span class="n">math</span> <span class="kn">import</span> <span class="n">isqrt</span>
 
 
 <span class="n">P</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">e</span> <span class="o">=</span> <span class="mi">65537</span>
 
-<span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">13</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">13</span><span class="p">):</span>
     <span class="n">xor</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="n">b</span> <span class="o">=</span> <span class="n">xor</span> <span class="o">+</span> <span class="n">error</span>
     <span class="n">D</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">b</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">n</span>
-    <span class="n">sqr</span> <span class="o">=</span> <span class="n">isqrt</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+    <span class="n">sqr</span> <span class="o">=</span> <span class="nf">isqrt</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">sqr</span> <span class="o">*</span> <span class="n">sqr</span> <span class="o">==</span> <span class="n">D</span><span class="p">:</span>
         <span class="n">x1</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">+</span> <span class="n">sqr</span><span class="p">)</span> <span class="o">//</span> <span class="o">-</span><span class="mi">2</span>
         <span class="n">x2</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">-</span> <span class="n">sqr</span><span class="p">)</span> <span class="o">//</span> <span class="o">-</span><span class="mi">2</span>
         <span class="k">if</span> <span class="n">x1</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">//</span> <span class="n">x1</span><span class="p">)</span> <span class="o">==</span> <span class="n">n</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="s">"Value found "</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span>
+            <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Value found </span><span class="sh">"</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span>
             <span class="n">P</span> <span class="o">=</span> <span class="n">x1</span>
         <span class="k">if</span> <span class="n">x2</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">//</span> <span class="n">x2</span><span class="p">)</span> <span class="o">==</span> <span class="n">n</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="s">"Value found "</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
+            <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Value found </span><span class="sh">"</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
             <span class="n">P</span> <span class="o">=</span> <span class="n">x2</span>
 
 <span class="n">Q</span> <span class="o">=</span> <span class="n">n</span> <span class="o">//</span> <span class="n">P</span>
 <span class="n">phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">P</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">Q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">modinv</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">long_to_bytes</span><span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">n</span><span class="p">)))</span>
+<span class="n">d</span> <span class="o">=</span> <span class="nf">modinv</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="nf">long_to_bytes</span><span class="p">(</span><span class="nf">pow</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">n</span><span class="p">)))</span>
 </code></pre></div></div>
 
 <p>And that’s about it:</p>
@@ -171,7 +173,7 @@ From the start we are greeted with this chunk of code and output in hex format</
         <b>Alikraken</b>
     </span>
     
-    <span>© 2022</span>
+    <span>© 2023</span>
   </a>
 </footer>
 

@@ -4,15 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
   <meta name="generator" content="Jekyll">
+  <meta name="google-site-verification" content="7KJy1PzJiembrfrHhOlsbL_CYSr-zHARDD6xkKA5S8I" />
 
-  <title>Honksay Writeup - MapleCTF 2022</title>
+  <title>Honksay Writeup [MapleCTF 2022]</title>
 
   <link rel="stylesheet" href="/css/main.css">
   
   <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Honksay Writeup - MapleCTF 2022 | Alikraken’s Blog</title>
-<meta name="generator" content="Jekyll v4.2.2" />
-<meta property="og:title" content="Honksay Writeup - MapleCTF 2022" />
+<title>Honksay Writeup [MapleCTF 2022] | Alikraken’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Honksay Writeup [MapleCTF 2022]" />
 <meta name="author" content="Alikraken" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Haha goose say funny thing" />
@@ -23,12 +24,13 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2022-08-31T00:00:00+06:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Honksay Writeup - MapleCTF 2022" />
+<meta property="twitter:title" content="Honksay Writeup [MapleCTF 2022]" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Alikraken","url":"https://kanin9.github.io/"},"dateModified":"2022-08-31T00:00:00+06:00","datePublished":"2022-08-31T00:00:00+06:00","description":"Haha goose say funny thing","headline":"Honksay Writeup - MapleCTF 2022","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:8000/honksay"},"url":"http://localhost:8000/honksay"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Alikraken","url":"https://kanin9.github.io/"},"dateModified":"2022-08-31T00:00:00+06:00","datePublished":"2022-08-31T00:00:00+06:00","description":"Haha goose say funny thing","headline":"Honksay Writeup [MapleCTF 2022]","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:8000/honksay"},"url":"http://localhost:8000/honksay"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
+
 <script type="text/javascript">
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -68,7 +70,7 @@
     <div class="container">
       <section id="main_content">
         <article>
-  <h2>Honksay Writeup - MapleCTF 2022</h2>
+  <h2>Honksay Writeup [MapleCTF 2022]</h2>
   <time datetime="2022-08-31T00:00:00+06:00" class="by-line">31 Aug 2022</time>
   <br><br> 
   <span style="display: block;">[
@@ -95,62 +97,62 @@
 
 <p>Looking onto its code we see that website’s backend has a goose script, where a puppeteer instance is created. This instance visits every page you specify in feedback field and sets flag cookie to environment variable. The only obstacle is that cookie is only visible for localhost.</p>
 
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">puppeteer</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">puppeteer</span><span class="dl">'</span><span class="p">);</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">puppeteer</span> <span class="o">=</span> <span class="nf">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">puppeteer</span><span class="dl">'</span><span class="p">);</span>
 <span class="kd">const</span> <span class="nx">FLAG</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">FLAG</span> <span class="o">||</span> <span class="dl">"</span><span class="s2">maple{fake}</span><span class="dl">"</span><span class="p">;</span>
 
 <span class="p">...</span>
 
-<span class="nx">page</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">browser</span><span class="p">.</span><span class="nx">newPage</span><span class="p">();</span>
-<span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">setCookie</span><span class="p">({</span>
+<span class="nx">page</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">browser</span><span class="p">.</span><span class="nf">newPage</span><span class="p">();</span>
+<span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nf">setCookie</span><span class="p">({</span>
       <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">flag</span><span class="dl">'</span><span class="p">,</span>
       <span class="na">value</span><span class="p">:</span> <span class="nx">FLAG</span><span class="p">,</span>
       <span class="na">domain</span><span class="p">:</span> <span class="dl">'</span><span class="s1">localhost</span><span class="dl">'</span><span class="p">,</span>
       <span class="na">samesite</span><span class="p">:</span> <span class="dl">'</span><span class="s1">none</span><span class="dl">'</span>
 <span class="p">});</span>
-<span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nx">goto</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="p">{</span><span class="na">waitUntil</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">networkidle2</span><span class="dl">'</span> <span class="p">}).</span><span class="k">catch</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">));</span>
+<span class="k">await</span> <span class="nx">page</span><span class="p">.</span><span class="nf">goto</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="p">{</span><span class="na">waitUntil</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">networkidle2</span><span class="dl">'</span> <span class="p">}).</span><span class="k">catch</span><span class="p">(</span><span class="nx">e</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="nx">e</span><span class="p">));</span>
 </code></pre></div></div>
 
 <p>Digging in the other script reveals that website has <code class="language-plaintext highlighter-rouge">/changehonk</code> route that can set our message on the frontend.</p>
 
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/changehonk</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">res</span><span class="p">.</span><span class="nx">cookie</span><span class="p">(</span><span class="dl">'</span><span class="s1">honk</span><span class="dl">'</span><span class="p">,</span> <span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">.</span><span class="nx">newhonk</span><span class="p">,</span> <span class="p">{</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/changehonk</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nf">cookie</span><span class="p">(</span><span class="dl">'</span><span class="s1">honk</span><span class="dl">'</span><span class="p">,</span> <span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">.</span><span class="nx">newhonk</span><span class="p">,</span> <span class="p">{</span>
         <span class="na">httpOnly</span><span class="p">:</span> <span class="kc">true</span>
     <span class="p">});</span>
-    <span class="nx">res</span><span class="p">.</span><span class="nx">cookie</span><span class="p">(</span><span class="dl">'</span><span class="s1">honkcount</span><span class="dl">'</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nf">cookie</span><span class="p">(</span><span class="dl">'</span><span class="s1">honkcount</span><span class="dl">'</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">{</span>
         <span class="na">httpOnly</span><span class="p">:</span> <span class="kc">true</span>
     <span class="p">});</span>
-    <span class="nx">res</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nf">redirect</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">);</span>
 <span class="p">});</span>
 </code></pre></div></div>
 
 <p>Well that is nothing like stored XSS, except there is one problem : upon visiting baseurl, backend performs a little check on our honk cookie with ‘xss’ plugin</p>
 
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">clean</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">xss</span><span class="dl">'</span><span class="p">);</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">clean</span> <span class="o">=</span> <span class="nf">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">xss</span><span class="dl">'</span><span class="p">);</span>
 
 <span class="p">...</span>
 
-<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">cookies</span><span class="p">.</span><span class="nx">honk</span><span class="p">){</span>
+<span class="nx">app</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">if </span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">cookies</span><span class="p">.</span><span class="nx">honk</span><span class="p">){</span>
         <span class="c1">//construct object</span>
         <span class="kd">let</span> <span class="nx">finalhonk</span> <span class="o">=</span> <span class="p">{};</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">cookies</span><span class="p">.</span><span class="nx">honk</span><span class="p">)</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">object</span><span class="dl">'</span><span class="p">){</span>
+        <span class="k">if </span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">cookies</span><span class="p">.</span><span class="nx">honk</span><span class="p">)</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">object</span><span class="dl">'</span><span class="p">){</span>
             <span class="nx">finalhonk</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">cookies</span><span class="p">.</span><span class="nx">honk</span>
         <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
             <span class="nx">finalhonk</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="na">message</span><span class="p">:</span> <span class="nx">clean</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">cookies</span><span class="p">.</span><span class="nx">honk</span><span class="p">),</span> 
-                <span class="na">amountoftimeshonked</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">cookies</span><span class="p">.</span><span class="nx">honkcount</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span>
+                <span class="na">message</span><span class="p">:</span> <span class="nf">clean</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">cookies</span><span class="p">.</span><span class="nx">honk</span><span class="p">),</span> 
+                <span class="na">amountoftimeshonked</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">cookies</span><span class="p">.</span><span class="nx">honkcount</span><span class="p">.</span><span class="nf">toString</span><span class="p">()</span>
             <span class="p">};</span>
         <span class="p">}</span>
-        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">template</span><span class="p">(</span><span class="nx">finalhonk</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span> <span class="nx">finalhonk</span><span class="p">.</span><span class="nx">amountoftimeshonked</span><span class="p">));</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="nf">template</span><span class="p">(</span><span class="nx">finalhonk</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span> <span class="nx">finalhonk</span><span class="p">.</span><span class="nx">amountoftimeshonked</span><span class="p">));</span>
     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
         <span class="kd">const</span> <span class="nx">initialhonk</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">HONK</span><span class="dl">'</span><span class="p">;</span>
-        <span class="nx">res</span><span class="p">.</span><span class="nx">cookie</span><span class="p">(</span><span class="dl">'</span><span class="s1">honk</span><span class="dl">'</span><span class="p">,</span> <span class="nx">initialhonk</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nf">cookie</span><span class="p">(</span><span class="dl">'</span><span class="s1">honk</span><span class="dl">'</span><span class="p">,</span> <span class="nx">initialhonk</span><span class="p">,</span> <span class="p">{</span>
             <span class="na">httpOnly</span><span class="p">:</span> <span class="kc">true</span>
         <span class="p">});</span>
-        <span class="nx">res</span><span class="p">.</span><span class="nx">cookie</span><span class="p">(</span><span class="dl">'</span><span class="s1">honkcount</span><span class="dl">'</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nf">cookie</span><span class="p">(</span><span class="dl">'</span><span class="s1">honkcount</span><span class="dl">'</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">{</span>
             <span class="na">httpOnly</span><span class="p">:</span> <span class="kc">true</span>
         <span class="p">});</span>
-        <span class="nx">res</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">);</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nf">redirect</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">});</span>
 </code></pre></div></div>
@@ -185,7 +187,7 @@
         <b>Alikraken</b>
     </span>
     
-    <span>© 2022</span>
+    <span>© 2023</span>
   </a>
 </footer>
 
